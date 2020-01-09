@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">QuizApp</string>
+    <string name="bt_genshi">原子</string>
+    <string name="bt_ryushi">粒子</string>
+    <string name="bt_denshi">電子</string>
+    <string name="bt_houshi">胞子</string>
+</resources>
