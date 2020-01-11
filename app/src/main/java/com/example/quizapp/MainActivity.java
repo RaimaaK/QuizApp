@@ -1,7 +1,9 @@
 package com.example.quizapp;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -26,10 +28,13 @@ public class MainActivity extends AppCompatActivity {
     static final private int QUIZ_COUNT = 5;
 
     ArrayList<ArrayList<String>> quizArray = new ArrayList<>();
+    ArrayList<String> test = new ArrayList<>();
 
     String quizData[][] = {{"particle", "粒子", "原子", "電子", "胞子"},
             {"electron", "電子","原子", "粒子", "胞子"},
-            {"quantum", "量子", "粒子", "電子", "因子"}};
+            {"quantum", "量子", "粒子", "電子", "因子"},
+            {"proton", "陽子", "電子", "中性子", "因子"},
+            {"neutron", "中性子", "電子", "陽子", "胞子"}};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         btAnswer3 = findViewById(R.id.btAns3);
         btAnswer4 = findViewById(R.id.btAns4);
 
-        //store all data of quiz
+        //Store all data of quiz
         for(int i = 0; i<quizData.length; i++){
             ArrayList<String> tmpArray = new ArrayList<>();
 
@@ -55,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
             quizArray.add(tmpArray);
         }
 
+        showNextQuiz();
+
     }
 
     public void showNextQuiz(){
@@ -63,32 +70,62 @@ public class MainActivity extends AppCompatActivity {
         Random random = new Random();
         int randomNum = random.nextInt();
 
-        //get a quiz you want
+        //Get a quiz you want
         ArrayList<String> quiz = quizArray.get(randomNum);
 
-        //show the question
+        //Show the question
         questionLabel.setText(quiz.get(0));
 
-        //set the right answer
+        //Set the right answer
         rightAnswer = quiz.get(1);
 
-        //remove the question(English word) from the array
+        //Remove the question(English word) from the array
         quiz.remove(0);
 
-        //shuffle the right answer and others
+        //Shuffle Both right answer and others
         Collections.shuffle(quiz);
 
-        //set the each text button
+        //Set the each text button
         btAnswer1.setText(quiz.get(0));
         btAnswer2.setText(quiz.get(1));
         btAnswer3.setText(quiz.get(2));
         btAnswer4.setText(quiz.get(3));
 
-        //remove this question from the quizArray
+        //Remove this question from the quizArray
         quizArray.remove(randomNum);
     }
 
     public void checkAnswer(View view){
+
+        //Depends on which button was chosen
+        Button answerBtn = findViewById(view.getId());
+        String btnText = answerBtn.getText().toString();
+
+        String alertTitle;
+        if(btnText.equals(rightAnswer)){
+            alertTitle = "Correct!";
+        } else{
+            alertTitle = "Wrong!";
+        }
+
+        //Create dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(alertTitle);
+        builder.setMessage("Answer: " + rightAnswer);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if(quizCount == QUIZ_COUNT){
+                    // Move to result
+                } else{
+                    quizCount++;
+                    showNextQuiz();
+                }
+            }
+        });
+
+        builder.setCancelable(false);
+        builder.show();
 
     }
 }
