@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     static final private int QUIZ_COUNT = 5;
 
     ArrayList<ArrayList<String>> quizArray = new ArrayList<>();
-    ArrayList<String> test = new ArrayList<>();
+    //ArrayList<String> test = new ArrayList<>();
 
     String quizData[][] = {{"particle", "粒子", "原子", "電子", "胞子"},
             {"electron", "電子","原子", "粒子", "胞子"},
@@ -41,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        countLabel = findViewById(R.id.countLabel);
+        questionLabel = findViewById(R.id.questionLabel);
         btAnswer1 = findViewById(R.id.btAns1);
         btAnswer2 = findViewById(R.id.btAns2);
         btAnswer3 = findViewById(R.id.btAns3);
@@ -68,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         countLabel.setText("Q" + quizCount);
 
         Random random = new Random();
-        int randomNum = random.nextInt();
+        int randomNum = random.nextInt(quizArray.size());
 
         //Get a quiz you want
         ArrayList<String> quiz = quizArray.get(randomNum);
@@ -104,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
         String alertTitle;
         if(btnText.equals(rightAnswer)){
             alertTitle = "Correct!";
+            rightAnswerCount++;
         } else{
             alertTitle = "Wrong!";
         }
@@ -117,6 +120,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 if(quizCount == QUIZ_COUNT){
                     // Move to result
+                    Intent intent = new Intent(MainActivity.this, ResultActivity.class);
+                    intent.putExtra("rightAnswerCount", rightAnswerCount);
+                    intent.putExtra("quizCount", QUIZ_COUNT);
+                    startActivity(intent);
                 } else{
                     quizCount++;
                     showNextQuiz();
